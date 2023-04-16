@@ -30,7 +30,7 @@ class Game{
     constructor(width, height){
         this.width = width;
         this.height = height;
-        this.ball = 0;
+        this.ball = new Ball(this.width/2, this.height/2);
         this.players = [];
     }
     Initialize(){
@@ -55,15 +55,23 @@ class Game{
     }
 }
 class Ball{
-    constructor(){
+    constructor(x, y){
         this.x = x;
         this.y = y;
+        this.size = 5;
+        this.directionY
     }
     Initialize(){
-
+        
     }
     Draw(context){
-
+        context.save();
+        context.fillStyle = '#fff';
+        context.beginPath();
+        context.rect(this.x-this.size/2, this.y-this.size/2, this.size, this.size);
+        context.fill();
+        context.closePath();
+        context.restore();
     }
     Update(deltaTime){
         
@@ -98,8 +106,8 @@ class Player{
         this.y += this.vy;
     }
     handleVerticalMovement(){
-        if(this.inputHandler.keys.w.pressed && this.y-this.height>0) this.directionY=this.inputHandler.vertical;
-        if(this.inputHandler.keys.s.pressed && this.y+this.height<this.game.height) this.directionY=this.inputHandler.vertical;
+        if(this.inputHandler.keys.w.pressed && this.y-this.height>=0) this.directionY=this.inputHandler.vertical;
+        if(this.inputHandler.keys.s.pressed && this.y+this.height<=this.game.height) this.directionY=this.inputHandler.vertical;
     }
 }
 class InputHandler{
