@@ -12,7 +12,8 @@ window.addEventListener('load', ()=>{
         game.Initialize();
     }
     function Animate(timeStamp){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
@@ -81,14 +82,13 @@ class Player{
         this.height = height;
         this.inputHandler = new InputHandler();
     }
-    Initialize(){
-
-    }
     Draw(context){
         context.save();
         context.fillStyle = '#fff';
-        context.fillRect(this.x-this.width/2, this.y-this.height/2, this.width, this.height);
+        context.beginPath();
+        context.rect(this.x-this.width/2, this.y-this.height/2, this.width, this.height);
         context.fill();
+        context.closePath();
         context.restore();
     }
     Update(deltaTime){
