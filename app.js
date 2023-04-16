@@ -11,30 +11,41 @@ window.addEventListener('load', ()=>{
     function Initialize(){
         game.Initialize();
     }
-    function animate(timeStamp){
+    function Animate(timeStamp){
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
-
+        console.log(ctx);
         game.Draw(ctx);
         game.Update(deltaTime);
-        window.requestAnimationFrame(animate);
+        window.requestAnimationFrame(Animate);
     }
+
+    Initialize();
+    Animate(0);
 });
 
 class Game{
-    constructor(width, height, ball){
+    constructor(width, height){
         this.width = width;
         this.height = height;
-        this.ball = ball;
+        this.ball = 0;
         this.players = [];
     }
     Initialize(){
 
     }
     Draw(context){
-
+        context.save();
+        context.beginPath();
+        context.strokeStyle = '#fff'
+        context.lineWidth = 10;
+        context.moveTo(this.width/2, 0);
+        context.lineTo(this.width/2, this.height);
+        context.stroke();
+        context.closePath();
+        context.restore();
     }
     Update(deltaTime){
 
@@ -53,5 +64,14 @@ class Ball{
     }
     Update(deltaTime){
         
+    }
+}
+class Player{
+    constructor(){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
     }
 }
