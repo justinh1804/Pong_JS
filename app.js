@@ -16,7 +16,7 @@ window.addEventListener('load', ()=>{
 
         deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
-        
+
         game.Draw(ctx);
         game.Update(deltaTime);
         window.requestAnimationFrame(animate);
@@ -33,15 +33,25 @@ class Game{
     Initialize(){
 
     }
-    Draw(){
+    Draw(context){
 
     }
-    Update(){
+    Update(deltaTime){
 
     }
 }
 class Ball{
     constructor(){
+        this.x = x;
+        this.y = y;
+    }
+    Initialize(){
 
+    }
+    Draw(context){
+
+    }
+    Update(deltaTime){
+        
     }
 }
