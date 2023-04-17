@@ -66,10 +66,10 @@ class Ball{
     constructor(x, y, game){
         this.x = x;
         this.y = y;
-        this.color = "#f0f";
+        this.color = "#ff0";
         this.game = game;
         this.size = 10;
-        this.speed = 0.3;
+        this.speed = 0.45;
         this.directionY = 0;
         this.directionX = 0;
     }
