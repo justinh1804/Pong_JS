@@ -85,11 +85,9 @@ class Ball{
         context.restore();
     }
     Update(deltaTime){
-        this.game.players.forEach(player=>{
-
-        });
+        this.CheckPaddleCollisions();
         this.CheckWallCollisions();
-        console.log(this.directionX, this.directionY);
+        //console.log(this.directionX, this.directionY);
         this.x += this.directionX*Math.cos(this.directionX)*this.speed*deltaTime;
         this.y += Math.sin(this.directionY)*this.speed*deltaTime;
     }
@@ -100,13 +98,21 @@ class Ball{
         this.directionY = Math.random()<0.5?Math.random()*1.5 -0.5:Math.random()*1.5 +0.5;
     }
     CheckWallCollisions(){
-        if(this.y-this.size<=0) this.directionY*=-1;
-        if(this.y+this.size>=this.game.height) this.directionY*=-1;
-        if(this.x-this.size<=0) this.InitialDirection();
-        if(this.x+this.size>=this.game.width) this.InitialDirection();
+        if(this.y-this.size/2<=0) this.directionY*=-1;
+        if(this.y+this.size/2>=this.game.height) this.directionY*=-1;
+        if(this.x-this.size/2<=0) this.InitialDirection();
+        if(this.x+this.size/2>=this.game.width) this.InitialDirection();
     }
     CheckPaddleCollisions(){
-        
+        this.game.players.forEach(player=>{
+            let collisionX = (this.x-this.size/2)+this.size>=(player.x-player.width/2) && (player.x-player.width/2)+player.width>=(this.x-this.size/2);
+            let collisionY = (this.y-this.size/2)+this.size>=(player.y-player.height/2) && (player.sy-player.height/2)+player.height>=(this.x-this.size/2);
+            console.log(collisionX, collisionY)
+            if(collisionX || collisionY){
+                console.log('hit')
+                this.directionX*=-1;
+            }
+        });        
     }
 }
 class Player{
