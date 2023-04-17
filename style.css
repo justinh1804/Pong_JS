@@ -18,7 +18,7 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 100px 400px 0 0;
-    color: #f0f;
+    color: #fff;
     font-size: 96px;
 }
 #player2{
@@ -26,6 +26,6 @@
     left: 50%;
     transform: translateX(-50%);
     padding: 100px 0 0 400px;
-    color: #0ff;
+    color: #fff;
     font-size: 96px;
 }
