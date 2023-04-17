@@ -8,6 +8,7 @@ window.addEventListener('load', ()=>{
     const game = new Game(canvas.width, canvas.height);
     let lastTime = 0;
     let deltaTime = 0;
+    
     function Initialize(){
         game.Initialize();
     }
@@ -30,12 +31,13 @@ class Game{
     constructor(width, height){
         this.width = width;
         this.height = height;
-        this.ball = new Ball(this.width/2, this.height/2);
+        this.ball = new Ball(this.width/2, this.height/2, this);
         this.players = [];
     }
     Initialize(){
         this.players.push(new Player(this.width/2-(15*this.width/32), this.height/2, 15, 150, this));
         this.players.push(new Player(this.width/2+(15*this.width/32), this.height/2, 15, 150, this));
+        this.ball.Initialize();
     }
     Draw(context){
         context.save();
@@ -49,20 +51,29 @@ class Game{
         context.closePath();
         context.restore();
         this.players.forEach(player=>player.Draw(context));
+        this.ball.Draw(context);
     }
     Update(deltaTime){
-        this.players.forEach(player=>player.Update(deltaTime));
+        this.players[0].y = clamp(this.players[0].y, 0, this.height);
+        this.players[1].y = clamp(this.players[1].y, 0, this.height);
+        this.players.forEach(player=>{
+            player.Update(deltaTime);
+        });
+        this.ball.Update(deltaTime);
     }
 }
 class Ball{
-    constructor(x, y){
+    constructor(x, y, game){
         this.x = x;
         this.y = y;
-        this.size = 5;
-        this.directionY
+        this.game = game;
+        this.size = 10;
+        this.speed = 0.3;
+        this.directionY = 0;
+        this.directionX = 0;
     }
     Initialize(){
-        
+        this.InitialDirection();
     }
     Draw(context){
         context.save();
@@ -74,6 +85,27 @@ class Ball{
         context.restore();
     }
     Update(deltaTime){
+        this.game.players.forEach(player=>{
+
+        });
+        this.CheckWallCollisions();
+        console.log(this.directionX, this.directionY);
+        this.x += this.directionX*Math.cos(this.directionX)*this.speed*deltaTime;
+        this.y += Math.sin(this.directionY)*this.speed*deltaTime;
+    }
+    InitialDirection(){
+        this.x = this.game.width/2;
+        this.y = this.game.height/2;
+        this.directionX = Math.random()<0.5?1:-1;
+        this.directionY = Math.random()<0.5?Math.random()*1.5 -0.5:Math.random()*1.5 +0.5;
+    }
+    CheckWallCollisions(){
+        if(this.y-this.size<=0) this.directionY*=-1;
+        if(this.y+this.size>=this.game.height) this.directionY*=-1;
+        if(this.x-this.size<=0) this.InitialDirection();
+        if(this.x+this.size>=this.game.width) this.InitialDirection();
+    }
+    CheckPaddleCollisions(){
         
     }
 }
@@ -147,4 +179,10 @@ class InputHandler{
             }
         })
     }
+}
+
+function clamp(value, min, max){
+    if(value < min) return min;
+    else if(value > max) return max;
+    return value;
 }
