@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Common Pixel', sans-serif;
 }
 #canvas1{
     position: absolute;
@@ -11,4 +12,20 @@
     background-color: #000;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
+}
+#player1{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 100px 400px 0 0;
+    color: #f0f;
+    font-size: 96px;
+}
+#player2{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 100px 0 0 400px;
+    color: #0ff;
+    font-size: 96px;
 }

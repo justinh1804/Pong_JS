@@ -1,4 +1,7 @@
+const player1ScoreEl = document.getElementById('player1');
+const player2ScoreEl = document.getElementById('player2');
 window.addEventListener('load', ()=>{
+    
     const canvas = document.getElementById('canvas1');
     const ctx = canvas.getContext('2d');
 
@@ -56,6 +59,8 @@ class Game{
     Update(deltaTime){
         this.players[0].y = clamp(this.players[0].y, 0, this.height);
         this.players[1].y = clamp(this.players[1].y, 0, this.height);
+        player1ScoreEl.innerText = this.players[0].score;
+        player2ScoreEl.innerText = this.players[1].score;
         this.players.forEach(player=>{
             player.Update(deltaTime);
         });
@@ -94,14 +99,21 @@ class Ball{
     InitialDirection(){
         this.x = this.game.width/2;
         this.y = this.game.height/2;
+        this.speed = 0.45;
         this.directionX = Math.random()<0.5?1:-1;
         this.directionY = Math.random()<0.5?Math.random()*1.5 -0.5:Math.random()*1.5 +0.5;
     }
     CheckWallCollisions(){
         if(this.y-this.size/2<=0) this.directionY*=-1;
         if(this.y+this.size/2>=this.game.height) this.directionY*=-1;
-        if(this.x-this.size/2<=0) this.InitialDirection();
-        if(this.x+this.size/2>=this.game.width) this.InitialDirection();
+        if(this.x-this.size/2<=0){
+            this.InitialDirection();
+            this.game.players[1].score++;
+        }
+        if(this.x+this.size/2>=this.game.width){
+            this.InitialDirection();
+            this.game.players[0].score++;
+        }
     }
     CheckPaddleCollisions(){
         this.game.players.forEach(player=>{
@@ -109,6 +121,7 @@ class Ball{
             let collisionY = this.y+this.size/2>=(player.y-player.height/2) && player.y+player.height/2>=(this.y-this.size/2);
             if(collisionX && collisionY){
                 this.directionX*=-1;
+                this.speed += 0.05;
             }
         });        
     }
@@ -122,6 +135,7 @@ class Player{
         this.paddleSpeed = 0.5;
         this.friction = 0.9;
         this.directionY = 0;
+        this.score = 0;
         this.width = width;
         this.height = height;
         this.inputHandler = new InputHandler();
