@@ -66,6 +66,7 @@ class Ball{
     constructor(x, y, game){
         this.x = x;
         this.y = y;
+        this.color = "#f0f";
         this.game = game;
         this.size = 10;
         this.speed = 0.3;
@@ -77,7 +78,7 @@ class Ball{
     }
     Draw(context){
         context.save();
-        context.fillStyle = '#fff';
+        context.fillStyle = this.color;
         context.beginPath();
         context.rect(this.x-this.size/2, this.y-this.size/2, this.size, this.size);
         context.fill();
@@ -87,7 +88,6 @@ class Ball{
     Update(deltaTime){
         this.CheckPaddleCollisions();
         this.CheckWallCollisions();
-        //console.log(this.directionX, this.directionY);
         this.x += this.directionX*Math.cos(this.directionX)*this.speed*deltaTime;
         this.y += Math.sin(this.directionY)*this.speed*deltaTime;
     }
@@ -105,11 +105,9 @@ class Ball{
     }
     CheckPaddleCollisions(){
         this.game.players.forEach(player=>{
-            let collisionX = (this.x-this.size/2)+this.size>=(player.x-player.width/2) && (player.x-player.width/2)+player.width>=(this.x-this.size/2);
-            let collisionY = (this.y-this.size/2)+this.size>=(player.y-player.height/2) && (player.sy-player.height/2)+player.height>=(this.x-this.size/2);
-            console.log(collisionX, collisionY)
-            if(collisionX || collisionY){
-                console.log('hit')
+            let collisionX = this.x+this.size/2>=(player.x-player.width/2) && player.x+player.width/2>=(this.x-this.size/2);
+            let collisionY = this.y+this.size/2>=(player.y-player.height/2) && player.y+player.height/2>=(this.y-this.size/2);
+            if(collisionX && collisionY){
                 this.directionX*=-1;
             }
         });        
