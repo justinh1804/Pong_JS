@@ -39,7 +39,8 @@ class Game{
     }
     Initialize(){
         this.players.push(new Player(this.width/2-(15*this.width/32), this.height/2, 15, 150, this));
-        this.players.push(new Player(this.width/2+(15*this.width/32), this.height/2, 15, 150, this));
+        this.players.push(new Enemy(this.width/2+(15*this.width/32), this.height/2, 15, 150, this));
+        this.players[0].inputHandler = new InputHandler();
         this.ball.Initialize();
     }
     Draw(context){
@@ -71,7 +72,7 @@ class Ball{
     constructor(x, y, game){
         this.x = x;
         this.y = y;
-        this.color = "#ff0";
+        this.color = "#fff";
         this.game = game;
         this.size = 10;
         this.speed = 0.45;
@@ -101,7 +102,7 @@ class Ball{
         this.y = this.game.height/2;
         this.speed = 0.45;
         this.directionX = Math.random()<0.5?1:-1;
-        this.directionY = Math.random()<0.5?Math.random()*1.5 -0.5:Math.random()*1.5 +0.5;
+        this.directionY = Math.random()<0.5?randomRange(-0.45,-1.0):randomRange(1.0,0.45);
     }
     CheckWallCollisions(){
         if(this.y-this.size/2<=0) this.directionY*=-1;
@@ -132,6 +133,7 @@ class Player{
         this.x = x;
         this.y = y;
         this.vy = 0;
+        this.color = "#fff";
         this.paddleSpeed = 0.5;
         this.friction = 0.9;
         this.directionY = 0;
@@ -142,7 +144,7 @@ class Player{
     }
     Draw(context){
         context.save();
-        context.fillStyle = '#fff';
+        context.fillStyle = this.color;
         context.beginPath();
         context.rect(this.x-this.width/2, this.y-this.height/2, this.width, this.height);
         context.fill();
@@ -160,6 +162,40 @@ class Player{
         if(this.inputHandler.keys.s.pressed && this.y+this.height<=this.game.height) this.directionY=this.inputHandler.vertical;
     }
 }
+class Enemy{
+    constructor(x, y, width, height, game){
+        this.game = game;
+        this.x = x;
+        this.y = y;
+        this.vy = 0;
+        this.color = "#fff";
+        this.paddleSpeed = 0.5;
+        this.friction = 0.9;
+        this.directionY = 0;
+        this.score = 0;
+        this.width = width;
+        this.height = height;
+    }
+    Draw(context){
+        context.save();
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.rect(this.x-this.width/2, this.y-this.height/2, this.width, this.height);
+        context.fill();
+        context.closePath();
+        context.restore();
+    }
+    Update(deltaTime){
+        this.handleVerticalMovement();
+        this.vy = this.paddleSpeed * (this.directionY*=this.friction) * deltaTime;
+        
+        this.y += this.vy;
+    }
+    handleVerticalMovement(){
+        if(this.game.ball.y<this.y && this.y-this.height>=0 && this.game.ball.directionX>=0) this.directionY=-1;
+        if(this.game.ball.y>this.y && this.y+this.height<=this.game.height && this.game.ball.directionX>=0) this.directionY=1;
+    }
+}
 class InputHandler{
     constructor(){
         this.lastKey = '';
@@ -171,6 +207,9 @@ class InputHandler{
             s: {
                 pressed: false
             },
+            p: {
+               pressed: false
+            }
         }
         window.addEventListener('keydown', (e)=>{
             switch(e.key){
@@ -181,6 +220,9 @@ class InputHandler{
                 case 's':
                     this.keys.s.pressed = true;
                     this.vertical = 1;
+                    break;
+                case 'p':
+                    this.keys.p.pressed = true;
                     break;
             }
         });
@@ -203,4 +245,7 @@ function clamp(value, min, max){
     if(value < min) return min;
     else if(value > max) return max;
     return value;
+}
+function randomRange(max, min){
+    return Math.random()*((max-min)+1)+min;
 }
